@@ -5,6 +5,7 @@ package sample.helloworld.impl;
 
 import akka.Done;
 import akka.NotUsed;
+
 import com.lightbend.lagom.javadsl.api.ServiceCall;
 import com.lightbend.lagom.javadsl.persistence.PersistentEntityRef;
 import com.lightbend.lagom.javadsl.persistence.PersistentEntityRegistry;
@@ -35,6 +36,7 @@ public class HelloServiceImpl implements HelloService {
       // Look up the hello world entity for the given ID.
       PersistentEntityRef<HelloCommand> ref = persistentEntityRegistry.refFor(HelloWorld.class, id);
       // Ask the entity the Hello command.
+
       return ref.ask(new Hello(id, Optional.empty()));
     };
   }

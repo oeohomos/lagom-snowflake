@@ -15,26 +15,11 @@ lazy val helloworldImpl = project("helloworld-impl")
     version := "1.0-SNAPSHOT",
     libraryDependencies ++= Seq(
       lagomJavadslPersistence,
-      lagomJavadslTestKit,
-      "com.github.rholder.fauxflake" % "fauxflake-core" % "1.1.0"
+      lagomJavadslTestKit
     )
   )
   .settings(lagomForkedTestSettings: _*)
   .dependsOn(helloworldApi)
-
-lazy val hellostreamApi = project("hellostream-api")
-  .settings(version := "1.0-SNAPSHOT")
-  .settings(
-    libraryDependencies += lagomJavadslApi
-  )
-
-lazy val hellostreamImpl = project("hellostream-impl")
-  .settings(version := "1.0-SNAPSHOT")
-  .enablePlugins(LagomJava)
-  .dependsOn(hellostreamApi, helloworldApi)
-  .settings(
-    libraryDependencies += lagomJavadslTestKit
-  )
 
 def project(id: String) = Project(id, base = file(id))
   .settings(eclipseSettings: _*)
