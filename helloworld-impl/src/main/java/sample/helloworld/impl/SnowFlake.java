@@ -61,7 +61,7 @@ public class SnowFlake {
         return currentTime << NODE_SHIFT << SEQ_SHIFT | node << SEQ_SHIFT | counter;
     }
 
-    public void main(String arg[]) {
+    static public void main(String arg[]) {
         int node = 1;
         SnowFlake s = new SnowFlake(node);
         long id = s.next();
