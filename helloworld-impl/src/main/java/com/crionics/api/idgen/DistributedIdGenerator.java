@@ -1,13 +1,14 @@
-package sample.helloworld.impl;
+package com.crionics.api.idgen;
 
 import java.util.Arrays;
 
 /**
  * A distributed Id generator based on snowflake, murmur3 and base58
- *
- * - Generated hashed distributed keys, 2^64, base 58 encoded
+ * <p>
+ * - Generated hashed distributed keys, 2^128, base 58 encoded
+ * - key = base58(murmur3_128(snowflake(nodeId)))
  * - nodeId is 1 for CLFY, and should be different for any other worker
- *
+ * <p>
  * Created by orefalo on 6/28/16.
  */
 public class DistributedIdGenerator {
@@ -15,31 +16,45 @@ public class DistributedIdGenerator {
     private final static String BASE58CHARS = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
     private final static char ENCODED_ZERO = '1';
 
+    // DO NOT CHANGE THIS NUMBER - unless you are starting hashing from scratch
+    // it is meant to prevent brute force attacks of murmur3. each app has its own need
+    // this one was calculated with SecureRandom and should be the same across the cluster
+    private final static int SEED = 1575865055;
+
     private SnowFlake snowflake;
 
-    public DistributedIdGenerator(int nodeId) {
-        snowflake = new SnowFlake(nodeId);
+
+    private static DistributedIdGenerator instance = new DistributedIdGenerator();
+
+    public static DistributedIdGenerator getInstance() {
+        return instance;
+    }
+
+    private DistributedIdGenerator() {
+        //TODO calculate node id, based on IP and port
+        snowflake = new SnowFlake(0);
+
     }
 
     public String next() {
 
         long dht_seq = snowflake.next();
-        long hash = murmur3(dht_seq);
-        return DistributedIdGenerator.base58(hash);
+        byte[] seq = longToByteArray(dht_seq);
+        byte[] hash = MurmurHash3.murmurhash3_x64_128(seq, 0, 8, SEED);
+        return base58Bytes(hash);
     }
 
-    /**
-     * murmur3 hasher
-     */
-    private static final long murmur3(long k) {
-        k ^= k >>> 33;
-        k *= 0xff51afd7ed558ccdL;
-        k ^= k >>> 33;
-        k *= 0xc4ceb9fe1a85ec53L;
-        k ^= k >>> 33;
-        return k;
-    }
 
+    private static byte[] longToByteArray(long l) {
+        byte[] retVal = new byte[8];
+
+        for (int i = 0; i < 8; i++) {
+            retVal[i] = (byte) l;
+            l >>= 8;
+        }
+
+        return retVal;
+    }
 
     private static String base58(long l) {
 
@@ -48,7 +63,10 @@ public class DistributedIdGenerator {
             input[i] = (byte) (l & 0xFF);
             l >>= 8;
         }
+        return base58Bytes(input);
+    }
 
+    private static String base58Bytes(byte[] input) {
         // Count leading zeros.
         int zeros = 0;
         while (zeros < input.length && input[zeros] == 0) {
@@ -100,14 +118,11 @@ public class DistributedIdGenerator {
         return (byte) remainder;
     }
 
-    static public void main(String arg[]) {
+    public static void main(String[] arg) {
 
-        int nodeId = 1;
-        DistributedIdGenerator g = new DistributedIdGenerator(nodeId);
-
-        for (int i = 0; i < 100; i++) {
-            System.out.println(g.next());
-        }
+        for (int i = 0; i < 100; i++)
+            System.out.println(DistributedIdGenerator.getInstance().next());
     }
+
 
 }

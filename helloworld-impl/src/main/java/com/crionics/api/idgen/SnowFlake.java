@@ -1,4 +1,4 @@
-package sample.helloworld.impl;
+package com.crionics.api.idgen;
 
 /**
  * A snowflake is a source of k-ordered unique 64-bit integers.
