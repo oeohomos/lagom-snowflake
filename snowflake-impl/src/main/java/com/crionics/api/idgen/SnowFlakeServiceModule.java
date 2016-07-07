@@ -9,10 +9,10 @@ import com.lightbend.lagom.javadsl.server.ServiceGuiceSupport;
 /**
  * The module that binds the service so that it can be served.
  */
-public class IdGeneratorServiceModule extends AbstractModule implements ServiceGuiceSupport {
+public class SnowFlakeServiceModule extends AbstractModule implements ServiceGuiceSupport {
     @Override
     protected void configure() {
 
-        bindServices(serviceBinding(IdGeneratorService.class, IdGeneratorServiceImpl.class));
+        bindServices(serviceBinding(SnowFlakeService.class, SnowFlakeServiceImpl.class));
     }
 }

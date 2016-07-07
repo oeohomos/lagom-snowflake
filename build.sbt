@@ -1,25 +1,24 @@
-organization in ThisBuild := "sample.helloworld"
+organization in ThisBuild := "com.crionics"
 
 // the Scala version that will be used for cross-compiled libraries
 scalaVersion in ThisBuild := "2.11.7"
 
-lazy val helloworldApi = project("helloworld-api")
+lazy val snowflakeApi = project("snowflake-api")
   .settings(
     version := "1.0-SNAPSHOT",
     libraryDependencies += lagomJavadslApi
   )
 
-lazy val helloworldImpl = project("helloworld-impl")
+lazy val snowflakeImpl = project("snowflake-impl")
   .enablePlugins(LagomJava)
   .settings(
     version := "1.0-SNAPSHOT",
     libraryDependencies ++= Seq(
-      lagomJavadslPersistence,
       lagomJavadslTestKit
     )
   )
   .settings(lagomForkedTestSettings: _*)
-  .dependsOn(helloworldApi)
+  .dependsOn(snowflakeApi)
 
 def project(id: String) = Project(id, base = file(id))
   .settings(eclipseSettings: _*)
@@ -45,6 +44,5 @@ lazy val eclipseSettings = Seq(
   unmanagedSourceDirectories in Compile := Seq((javaSource in Compile).value),
   unmanagedSourceDirectories in Test := Seq((javaSource in Test).value)
 )
-
 
 fork in run := true

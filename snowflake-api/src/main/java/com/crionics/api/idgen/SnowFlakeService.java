@@ -12,12 +12,12 @@ import com.lightbend.lagom.javadsl.api.Service;
 import com.lightbend.lagom.javadsl.api.ServiceCall;
 
 /**
- * The hello service interface.
+ * The service interface.
  * <p>
  * This describes everything that Lagom needs to know about how to serve and
  * consume the HelloService.
  */
-public interface IdGeneratorService extends Service {
+public interface SnowFlakeService extends Service {
 
   /**
    * Example: curl http://localhost:9000/api/IdGenerator
@@ -27,7 +27,7 @@ public interface IdGeneratorService extends Service {
   @Override
   default Descriptor descriptor() {
     // @formatter:off
-    return named("idGeneratorService").withCalls(
+    return named("snowflake").withCalls(
         pathCall("/api/IdGenerator",  this::generateId)
       ).withAutoAcl(true);
     // @formatter:on

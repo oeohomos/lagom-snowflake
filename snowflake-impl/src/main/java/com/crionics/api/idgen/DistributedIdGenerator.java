@@ -1,9 +1,12 @@
 package com.crionics.api.idgen;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 
 /**
- * A distributed Id generator based on snowflake, murmur3 and base58
+ * A distributed Id generator based on snowflake_64, murmur3_128 and base58
  * <p>
  * - Generated hashed distributed keys, 2^128, base 58 encoded
  * - key = base58(murmur3_128(snowflake(nodeId)))
@@ -16,13 +19,14 @@ public class DistributedIdGenerator {
     private final static String BASE58CHARS = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
     private final static char ENCODED_ZERO = '1';
 
-    // DO NOT CHANGE THIS NUMBER - unless you are starting hashing from scratch
-    // it is meant to prevent brute force attacks of murmur3. each app has its own need
-    // this one was calculated with SecureRandom and should be the same across the cluster
-    private final static int SEED = 1575865055;
+    // DO NOT CHANGE THIS NUMBER IF YOU HAVE EXISTING DATA (hashes)!
+    // The seed should however be changed when you introduce hashing to your project.
+    // typically the value will be different per application/client.
+    private int seed = 1575865055;
 
     private SnowFlake snowflake;
 
+    private final Logger log = LoggerFactory.getLogger(DistributedIdGenerator.class);
 
     private static DistributedIdGenerator instance = new DistributedIdGenerator();
 
@@ -31,7 +35,13 @@ public class DistributedIdGenerator {
     }
 
     private DistributedIdGenerator() {
-        //TODO calculate node id, based on IP and port
+
+        if (seed == 1575865055) {
+
+            log.warn("For security reasons, you should generate a new random SEED for your application. Please customize code.");
+        }
+
+        // TODO: calculate node id, based on IP and port
         snowflake = new SnowFlake(0);
 
     }
@@ -40,7 +50,7 @@ public class DistributedIdGenerator {
 
         long dht_seq = snowflake.next();
         byte[] seq = longToByteArray(dht_seq);
-        byte[] hash = MurmurHash3.murmurhash3_x64_128(seq, 0, 8, SEED);
+        byte[] hash = MurmurHash3.murmurhash3_x64_128(seq, 0, 8, seed);
         return base58Bytes(hash);
     }
 
@@ -54,16 +64,6 @@ public class DistributedIdGenerator {
         }
 
         return retVal;
-    }
-
-    private static String base58(long l) {
-
-        byte[] input = new byte[8];
-        for (int i = 7; i >= 0; i--) {
-            input[i] = (byte) (l & 0xFF);
-            l >>= 8;
-        }
-        return base58Bytes(input);
     }
 
     private static String base58Bytes(byte[] input) {

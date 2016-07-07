@@ -8,7 +8,7 @@ import com.lightbend.lagom.javadsl.api.ServiceCall;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
-public class IdGeneratorServiceImpl implements IdGeneratorService {
+public class SnowFlakeServiceImpl implements SnowFlakeService {
 
     public static DistributedIdGenerator idGen = DistributedIdGenerator.getInstance();
 

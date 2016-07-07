@@ -15,7 +15,7 @@ public class IdGenServiceTest {
   @Test
   public void shouldStorePersonalizedGreeting() throws Exception {
     withServer(defaultSetup(), server -> {
-      IdGeneratorService service = server.client(IdGeneratorService.class);
+      SnowFlakeService service = server.client(SnowFlakeService.class);
 
       String msg1 = service.generateId().invoke().toCompletableFuture().get(5, SECONDS);
       assertEquals("Hello, Alice!", msg1); // default greeting
