@@ -43,7 +43,19 @@ public class DistributedIdGenerator {
 
         // TODO: calculate node id, based on IP and port
         snowflake = new SnowFlake(0);
+    }
 
+    public String[] next(int count) throws IllegalArgumentException {
+
+        if (count < 1)
+            throw new IllegalArgumentException("Id count must be > 1");
+
+        String[] ids = new String[count];
+
+        for (int i = 0; i < count; i++)
+            ids[i] = next();
+
+        return ids;
     }
 
     public String next() {
@@ -54,7 +66,6 @@ public class DistributedIdGenerator {
         return base58Bytes(hash);
     }
 
-
     private static byte[] longToByteArray(long l) {
         byte[] retVal = new byte[8];
 
@@ -62,7 +73,6 @@ public class DistributedIdGenerator {
             retVal[i] = (byte) l;
             l >>= 8;
         }
-
         return retVal;
     }
 

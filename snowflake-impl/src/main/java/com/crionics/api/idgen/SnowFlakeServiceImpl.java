@@ -17,4 +17,10 @@ public class SnowFlakeServiceImpl implements SnowFlakeService {
         return (x) -> completedFuture(idGen.next());
     }
 
+
+    @Override
+    public ServiceCall<NotUsed, String[]> generateIds(int count) {
+        return (x) -> completedFuture(idGen.next(count));
+    }
+
 }
