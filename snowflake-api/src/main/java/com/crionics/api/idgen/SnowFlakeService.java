@@ -34,12 +34,9 @@ public interface SnowFlakeService extends Service {
     // @formatter:off
     return named("snowflake").withCalls(
         pathCall("/api/IdGenerator",  this::generateId),
-        pathCall("/api/IdGenerator/{count}",  this::generateIds)
+        pathCall("/api/IdGenerator/:count",  this::generateIds)
       ).withAutoAcl(true);
     // @formatter:on
   }
-
-
-
 
 }
