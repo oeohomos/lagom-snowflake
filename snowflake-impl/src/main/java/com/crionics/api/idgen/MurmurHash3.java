@@ -104,7 +104,7 @@ public final class MurmurHash3 {
         h2 += h1;
 
 
-        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES*2);
+        ByteBuffer buffer = ByteBuffer.allocate(16);
         buffer.putLong(h1);
         buffer.putLong(h2);
         return buffer.array();
