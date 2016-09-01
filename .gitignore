@@ -1,15 +1,6 @@
 target
 ideatarget
 .DS_Store
-.target
-bin
-.cache
-.cache-main
-.cache-tests
-.classpath
-.project
-.tmpBin
-.factorypath
-.settings
 logs
-.sbtserver
+.idea
+
