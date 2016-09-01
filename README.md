@@ -7,9 +7,10 @@ id=base58(murmur3_128(snowflake_64))
 
 ## Compilation
 
-`sbt runAll`
+`mvn lagom:runAll`
 
-`curl http://localhost:9000/api/IdGenerator`
+`curl http://localhost:9000/api/idgen`
+`curl http://localhost:9000/api/idgen/10`
 
 ## IMPORTANT: Security
 
@@ -17,5 +18,4 @@ If you use this project, please make sure to generate a new random seed value. S
 
 ## TODO
 
-* add parameter to generate more than one id
-* randomize snowflake node id
+* Randomize snowflake node id

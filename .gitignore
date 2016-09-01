@@ -1,5 +1,6 @@
 target
 ideatarget
+.DS_Store
 .target
 bin
 .cache

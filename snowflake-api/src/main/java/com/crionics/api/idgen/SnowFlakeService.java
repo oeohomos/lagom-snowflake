@@ -20,12 +20,12 @@ import com.lightbend.lagom.javadsl.api.ServiceCall;
 public interface SnowFlakeService extends Service {
 
   /**
-   * curl http://localhost:9000/api/IdGenerator
+   * curl http://localhost:9000/api/idgen
    */
   ServiceCall<NotUsed, String> generateId();
 
   /**
-   * curl http://localhost:9000/api/IdGenerator/5
+   * curl http://localhost:9000/api/idgen/5
    */
   ServiceCall<NotUsed, String[]> generateIds(int count);
 
@@ -33,8 +33,8 @@ public interface SnowFlakeService extends Service {
   default Descriptor descriptor() {
     // @formatter:off
     return named("snowflake").withCalls(
-        pathCall("/api/IdGenerator",  this::generateId),
-        pathCall("/api/IdGenerator/:count",  this::generateIds)
+        pathCall("/api/idgen",  this::generateId),
+        pathCall("/api/idgen/:count",  this::generateIds)
       ).withAutoAcl(true);
     // @formatter:on
   }
