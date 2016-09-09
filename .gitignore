@@ -3,4 +3,6 @@ ideatarget
 .DS_Store
 logs
 .idea
+.sbtserver
+
 
